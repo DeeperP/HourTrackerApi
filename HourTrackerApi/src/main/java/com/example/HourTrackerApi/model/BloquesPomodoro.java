@@ -1,36 +1,50 @@
 package com.example.HourTrackerApi.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter@Setter
+@Table(name = "bloques_pomodoro")
+@Getter
+@Setter
 public class BloquesPomodoro {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long bp_id;
-    private String nombre_Bloque;
-    private LocalDateTime horaDeInicio, horaDeFinalizacion;
 
-    @ManyToOne
-    @JoinColumn(name = "Sesiones_Pomodoro")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "block_id")
+    private Long id;
+
+    @Column(name = "nombre_bloque", nullable = false, length = 100)
+    private String nombreBloque;
+
+    @Column(name = "hora_inicio", nullable = false)
+    private LocalDateTime horaDeInicio;
+
+    @Column(name = "hora_fin", nullable = false)
+    private LocalDateTime horaDeFinalizacion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "session_id", nullable = false)
     private PomodoroSession sesionPomodoro;
 
-    @ManyToOne
-    private SemanalGoal obetivoSemanal;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "goal_id")
+    private SemanalGoal objetivoSemanal;
 
     public BloquesPomodoro() {
     }
 
-    public BloquesPomodoro(Long bp_id, String nombre_Bloque, LocalDateTime horaDeInicio, LocalDateTime horaDeFinalizacion, PomodoroSession sesionPomodoro, SemanalGoal obetivoSemanal) {
-        this.bp_id = bp_id;
-        this.nombre_Bloque = nombre_Bloque;
+    public BloquesPomodoro(Long id, String nombreBloque, LocalDateTime horaDeInicio, LocalDateTime horaDeFinalizacion, PomodoroSession sesionPomodoro, SemanalGoal objetivoSemanal) {
+        this.id = id;
+        this.nombreBloque = nombreBloque;
         this.horaDeInicio = horaDeInicio;
         this.horaDeFinalizacion = horaDeFinalizacion;
         this.sesionPomodoro = sesionPomodoro;
-        this.obetivoSemanal = obetivoSemanal;
+        this.objetivoSemanal = objetivoSemanal;
     }
 }

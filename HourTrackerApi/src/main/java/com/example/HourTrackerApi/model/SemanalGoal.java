@@ -4,33 +4,46 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter@Setter
+@Table(name = "semanal_goals")
+@Getter
+@Setter
 public class SemanalGoal {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long sg_id;
-    private int horas_trabajadas;
-    private String nombre_Objetivo;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "goal_id")
+    private Long id;
+
+    @Column(name = "horas_trabajadas", nullable = false)
+    private int horasTrabajadas;
+
+    @Column(name = "nombre_objetivo", nullable = false, length = 100)
+    private String nombreObjetivo;
+
+    @Column(name = "objetivo_logrado", nullable = false)
     private Boolean objetivoLogrado;
 
-    @ManyToOne
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserT userT;
 
-    @ManyToMany
-    private List<BloquesPomodoro> sesionesPomodoro;
+    // Relación 1:N con BloquesPomodoro
+    @OneToMany(mappedBy = "objetivoSemanal", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<BloquesPomodoro> bloquesPomodoro = new ArrayList<>();
 
     public SemanalGoal() {
     }
 
-    public SemanalGoal(Long sg_id, int horas_trabajadas, String nombre_Objetivo, Boolean objetivoLogrado, User user, List<BloquesPomodoro> sesionesPomodoro) {
-        this.sg_id = sg_id;
-        this.horas_trabajadas = horas_trabajadas;
-        this.nombre_Objetivo = nombre_Objetivo;
+    public SemanalGoal(Long id, int horasTrabajadas, String nombreObjetivo, Boolean objetivoLogrado, UserT userT, List<BloquesPomodoro> bloquesPomodoro) {
+        this.id = id;
+        this.horasTrabajadas = horasTrabajadas;
+        this.nombreObjetivo = nombreObjetivo;
         this.objetivoLogrado = objetivoLogrado;
-        this.user = user;
-        this.sesionesPomodoro = sesionesPomodoro;
+        this.userT = userT;
+        this.bloquesPomodoro = bloquesPomodoro;
     }
 }
